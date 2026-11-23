@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>索子麻雀 2人対戦</title>
+<style>
+:root{--w0:min(58px,calc((100vw - 28px)/14.6));--fg:#f3efe2;--pn:rgba(0,0,0,.36);--ac:#e0a526;--rd:#d9453a;--gr:#2f9e63;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;color:var(--fg);background:radial-gradient(ellipse at 50% 40%,#23704a,#0c2e20 78%) fixed;font:14px/1.45 system-ui,"Hiragino Sans","Noto Sans JP",sans-serif}
+main{max-width:920px;margin:0 auto;padding:8px}
+.tbl{display:flex;flex-direction:column;gap:6px}
+.zone,.lob{background:var(--pn);border-radius:12px;padding:8px 10px}
+.lob{max-width:480px;margin:30px auto;padding:16px}
+.pl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.pl.on b{color:var(--ac)}
+.wd{display:inline-flex;width:24px;height:24px;border-radius:50%;background:#f3efe2;color:#222;align-items:center;justify-content:center;font-weight:800}
+.pt{margin-left:auto;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.tag{font-size:11px;padding:1px 8px;border-radius:99px;background:var(--rd);color:#fff}.tag.gy{background:#666}
+.t{--w:var(--w0);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:var(--w);height:calc(var(--w)*1.4);margin:0 1px;border-radius:calc(var(--w)*.12);background:linear-gradient(#fffdf5,#ece6d0);color:#222;font-weight:800;font-size:calc(var(--w)*.56);line-height:1;box-shadow:0 calc(var(--w)*.09) 0 #1d7a46,0 calc(var(--w)*.12) 3px rgba(0,0,0,.5);vertical-align:bottom;box-sizing:border-box;user-select:none}
+.t small{font-size:calc(var(--w)*.24);color:#1d7a46;margin-top:2px}
+.t.sm{--w:calc(var(--w0)*.8)}
+.t.s,.t.g{color:#14753f}.t.r{color:#d0342c}
+.t.ak{color:#d0342c;background:linear-gradient(#fff3ee,#f3cfc6)}.t.ak small{color:#d0342c}
+.t.bk{background:linear-gradient(#2f9e63,#1b7a48);color:transparent;box-shadow:0 calc(var(--w)*.09) 0 #0d4a2a,0 2px 3px rgba(0,0,0,.5)}
+.t.h{cursor:pointer;transition:transform .08s}.t.h:hover:not(.no){transform:translateY(-8px)}.t.no{filter:brightness(.72);cursor:default}
+.t.ri{outline:2px solid var(--ac)}.t.nw{outline:2px solid #fff;animation:bl 1s infinite alternate}
+@keyframes bl{to{outline-color:transparent}}
+.rv{display:grid;grid-template-columns:repeat(6,max-content);gap:4px 1px;justify-content:center;min-height:calc(var(--w0)*1.2)}
+.wt{margin:4px 0;text-align:center}.wi{display:inline-flex;flex-direction:column;align-items:center;margin:0 5px}.wi i{font-style:normal;font-size:11px;opacity:.85}
+.t.sel{transform:translateY(-10px);outline:2px solid var(--ac)}
+.ctr{display:flex;align-items:center;justify-content:space-around;gap:8px;flex-wrap:wrap;background:rgba(0,0,0,.5);border-radius:12px;padding:6px 10px}
+.rn{font-size:22px;font-weight:800;color:var(--ac)}.dim{opacity:.7;font-size:12px}
+.hnd{display:flex;align-items:flex-end;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.ml{display:inline-flex;margin-right:8px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;min-height:38px;margin:6px 0}
+button,input,select{font:inherit;border-radius:99px;border:0;padding:8px 18px}
+input,select{background:rgba(255,255,255,.12);color:var(--fg);border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 10px}
+option{color:#222}
+button{font-weight:700;background:#3b4a42;color:#fff;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.4)}
+button.p{background:var(--gr)}button.w{background:var(--rd)}button.y{background:var(--ac);color:#222}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.toast{text-align:center;color:#ffb4a8;margin-top:6px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:12px;z-index:5;overflow:auto}
+.md{background:#15382a;border:1px solid var(--gr);border-radius:14px;padding:16px;max-width:560px;width:100%}
+.stk{display:inline-block;width:76px;height:10px;border-radius:5px;background:#f4f0e4;box-shadow:0 0 0 1px #888;position:relative;vertical-align:middle}.stk::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:#c0392b}
+.sw{text-align:center;margin-bottom:4px}
+.mt{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:8px;z-index:4;padding:4px 10px;background:rgba(0,0,0,.45)}
+.sc{font-weight:800;font-size:18px}
+.mn{right:auto;left:8px}
+.menu{max-width:460px;margin:0 auto;padding:14px 4px;display:flex;flex-direction:column;gap:12px}
+.logo{display:flex;justify-content:center;gap:6px;margin-top:8px}.menu h1{margin:0;text-align:center;font-size:30px;letter-spacing:.2em}.sub{text-align:center;opacity:.75;font-size:12px}
+.card{background:var(--pn);border-radius:14px;padding:12px 14px}.ct{font-size:12px;opacity:.7;margin-bottom:6px}.card input{width:100%;box-sizing:border-box}
+.seg{display:flex;gap:6px}.seg button{flex:1;background:rgba(255,255,255,.1);box-shadow:none}.seg button.on{background:var(--ac);color:#222}
+.big{width:100%;padding:14px;font-size:17px}.code{font-size:34px;font-weight:800;letter-spacing:.15em;text-align:center}
+.slot{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.1);margin-top:6px}.slot.emp{opacity:.5;border:1px dashed rgba(255,255,255,.4);background:none}
+details.rl{font-size:13px;opacity:.85}.rl ul{margin:6px 0 0;padding-left:20px}
+.crown{font-size:46px;text-align:center}.rank{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.rk{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.08)}.rk.top{background:rgba(224,165,38,.22);outline:1px solid var(--ac)}
+.rk .no{font-weight:800;width:36px;color:var(--ac)}.rk .pt{margin-left:auto;font-size:22px;font-weight:800}.hs{margin:10px 0;font-size:13px}
+
+table{border-collapse:collapse;width:100%}td{padding:3px 6px;border-bottom:1px solid rgba(255,255,255,.15)}td+td{text-align:right}
+</style></head><body><main id="app"><div class="box">読み込み中…</div></main>
+<script>
+const N="東南西北白発中",RN=["東1","東2","南1","南2","西1","西2","北1","北2"];
+const nt=t=>t==16?4:t;
+const tn=i=>{i=nt(i);return i<9?(i+1)+"索":N[i-9]};
+const tl=(i,c="")=>`<span class="t ${c}${i==16?" ak":i==15?" r":i==14?" g":i<9?" s":""}">${i<9||i==16?(nt(i)+1)+"<small>索</small>":N[i-9]}</span>`;
+const bk=n=>Array(n).fill('<span class="t sm bk"></span>').join("");
+const cnt=a=>{const c=Array(16).fill(0);a.forEach(x=>c[nt(x)]++);return c};
+const srt=a=>a.sort((x,y)=>nt(x)-nt(y)||x-y),cl=o=>JSON.parse(JSON.stringify(o));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const doraOf=i=>{i=nt(i);return i<9?(i+1)%9:i<13?9+(i-8)%4:13+(i-12)%3};
+/* ---- 和了判定 ---- */
+function sets(c,n,acc,out){const i=c.findIndex(x=>x>0);
+ if(i<0){if(n==0)out.push(acc.slice());return}if(n==0)return;
+ if(c[i]>=3){c[i]-=3;acc.push(["k",i]);sets(c,n-1,acc,out);acc.pop();c[i]+=3}
+ if(i<7&&c[i+1]&&c[i+2]){c[i]--;c[i+1]--;c[i+2]--;acc.push(["s",i]);sets(c,n-1,acc,out);acc.pop();c[i]++;c[i+1]++;c[i+2]++}}
+function decomp(c,n){const out=[];for(let p=0;p<16;p++)if(c[p]>=2){c[p]-=2;const o=[];sets(c,n,[],o);o.forEach(s=>out.push({p,s}));c[p]+=2}return out}
+const isWin=(c,n)=>decomp(c,n).length>0||(n==4&&c.filter(x=>x==2).length==7);
+const tenpai=(h,nm)=>{for(let t=0;t<16;t++){const c=cnt(h);if(c[t]>=4)continue;c[t]++;if(isWin(c,4-nm))return true}return false};
+function evalH(g,m,conc,tsumo){
+ const ml=g.melds[m],n=4-ml.length,men=ml.every(x=>x.k=="kan"&&!x.open),c=cnt(conc);
+ const at=conc.concat(...ml.map(x=>x.tiles)),all=cnt(at);
+ const rw=9+(g.round>>1),sw=9+(m==g.dealer?0:1);
+ const ds=decomp(c,n).map(d=>({p:d.p,s:d.s.concat(ml.map(x=>[x.k=="chi"?"s":"k",nt(x.tiles[0])]))}));
+ if(men&&c.filter(x=>x==2).length==7)ds.push({chi:1});
+ if(!ds.length)return null;
+ const com=[],hon=all.slice(9).reduce((a,b)=>a+b,0);
+ if(men&&g.riichi[m])com.push(["リーチ",1]);
+ if(men&&tsumo)com.push(["門前清自摸和",1]);
+ if(all[0]+all[8]+hon==0)com.push(["断幺九",1]);
+ if(hon==0)com.push(["清一色",men?6:5]);else com.push(["混一色",men?3:2]);
+ let ym=[];
+ if([0,4,6,8,9,10,11,12,13,15].every(i=>!all[i]))ym.push(["緑一色",13]);
+ if(all.slice(0,9).every(x=>!x))ym.push(["字一色",13]);
+ let best=null;
+ for(const d of ds){
+  let y=com.slice(),fu=20;
+  if(d.chi){y.push(["七対子",2]);fu=25}
+  else{
+   d.s.forEach(([k,i],j)=>{if(k=="k"){
+     if(i>=13)y.push(["役牌 "+tn(i),1]);if(i==rw)y.push(["場風 "+tn(i),1]);if(i==sw)y.push(["自風 "+tn(i),1]);
+     const mm=ml[j-n],cc=j<n||(mm.k=="kan"&&!mm.open);fu+=((i==0||i==8||i>8)?8:4)*(mm&&mm.k=="kan"?4:1)/(cc?1:2)}});
+   if(d.s.every(s=>s[0]=="k"))y.push(["対々和",2]);
+   const sq=d.s.filter(s=>s[0]=="s").map(s=>s[1]);
+   if(men&&sq.some((a,i)=>sq.indexOf(a)!=i))y.push(["一盃口",1]);
+   if([0,3,6].every(a=>sq.includes(a)))y.push(["一気通貫",men?2:1]);
+   if(d.p>=13)fu+=2;if(d.p==rw)fu+=2;if(d.p==sw)fu+=2;
+   fu+=tsumo?2:(men?10:0);fu=Math.ceil(fu/10)*10}
+  let han=y.reduce((a,b)=>a+b[1],0);
+  y=y.concat(ym);han+=ym.reduce((a,b)=>a+b[1],0);if(!y.length)continue;{
+   const dn=g.dora.reduce((a,i)=>a+all[doraOf(i)],0),rd=at.filter(x=>x==16).length,
+   un=men&&g.riichi[m]?g.ura.slice(0,g.dora.length).reduce((a,i)=>a+all[doraOf(i)],0):0;
+   if(dn){y.push(["ドラ",dn]);han+=dn}if(rd){y.push(["赤ドラ",rd]);han+=rd}if(un){y.push(["裏ドラ",un]);han+=un}}
+  if(!y.length)continue;
+  const pts=fu*2**(han+2)*(m==g.dealer?6:4);
+  if(!best||pts>best.pts)best={yaku:y,han,fu,pts,rii:men&&g.riichi[m],ura:(g.ura||[]).slice(0,g.dora.length)}}
+ return best}
+/* ---- ゲーム進行 ---- */
+const wt=(h,nm)=>{const r=[];for(let t=0;t<16;t++){const c=cnt(h);if(c[t]>=4)continue;c[t]++;if(isWin(c,4-nm))r.push(t)}return r};
+const ank=(g,m)=>g.melds[m].every(x=>x.k=="kan"&&!x.open);
+const furi=(g,m)=>{const w=wt(g.hands[m],g.melds[m].length);return w.length>0&&(g.fur[m]||w.some(x=>g.dh[m].some(t=>nt(t)==x)))};
+function dgame(g){g.phase="result";g.res={kind:"draw"};(g.hist=g.hist||[]).push({rn:RN[g.round],w:-1})}
+function draw(g,p){if(!g.wall.length){dgame(g);return}g.drawn=g.wall.pop();g.turn=p;g.phase="discard"}
+function deal(g){const w=[];for(let i=0;i<16;i++)for(let k=0;k<4;k++)w.push(i==4&&!k?16:i);
+ for(let i=w.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[w[i],w[j]]=[w[j],w[i]]}
+ g.hands=[srt(w.splice(0,13)),srt(w.splice(0,13))];g.dora=w.splice(0,g.doraN);g.ura=w.splice(0,g.doraN+4);g.wall=w;g.dh=[[],[]];g.fur=[false,false];g.rj=[-1,-1];
+ g.melds=[[],[]];g.disc=[[],[]];g.riichi=[false,false];g.dealer=g.round%2;g.last=null;g.res=null;g.drawn=null;draw(g,g.dealer)}
+function opts(g,o){const t=nt(g.last.t),h=g.hands[o],c=cnt(h),r={chi:[]};
+ r.ron=!!evalH(g,o,h.concat(g.last.t),false)&&!furi(g,o);
+ if(!g.riichi[o]){r.pon=c[t]>=2;r.kan=c[t]>=3&&g.wall.length>1;
+}
+ r.any=r.ron||r.pon||r.kan||r.chi.length>0;return r}
+function discard(g,m,t,rii){const h=g.hands[m].slice();if(g.drawn!=null)h.push(g.drawn);h.splice(h.indexOf(t),1);
+ g.hands[m]=srt(h);g.drawn=null;if(rii)g.riichi[m]=true;if(!g.riichi[m])g.fur[m]=false;if(rii)g.rj[m]=g.disc[m].length;g.dh[m].push(t);g.disc[m].push(t);g.last={t,p:m};
+ const o=1-m;if(opts(g,o).any){g.phase="react";g.turn=o}else draw(g,o)}
+function win(g,m,r,tsumo,tile){g.scores[m]+=r.pts;(g.hist=g.hist||[]).push({rn:RN[g.round],w:m,pts:r.pts,han:r.han,fu:r.fu,ts:tsumo});g.phase="result";
+ g.res={kind:"win",w:m,tsumo,tile,hand:g.hands[m].slice(),melds:g.melds[m],dora:g.dora.slice(),...r}}
+function nextRound(g){if(g.round+1>=(g.mode=="S"?4:8))g.phase="end";else{g.round++;deal(g)}}
+/* ---- 接続 ---- */
+let db,ref,G=null,me=-1,code="",rii=false,msg="",local=false,ct=0,pv=null,unsub=null,mm=false;
+const sg=k=>{try{return localStorage.getItem(k)||""}catch(e){return""}},ss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let pid=sg("mjpid");if(!pid){pid=Math.random().toString(36).slice(2);ss("mjpid",pid)}
+const $=id=>document.getElementById(id),app=$("app");
+function save(g){g.v=(g.v||0)+1;snd(G,g);G=g;render();if(local){cpuTick();return}ref.set({s:JSON.stringify(g)}).catch(()=>{msg="保存に失敗しました。権限（編集/投稿可）を確認してください。";render()})}
+function act(f){const g=cl(G);f(g);rii=false;pv=null;save(g)}
+function listen(){unsub=ref.onSnapshot(s=>{if(s.exists){const n=JSON.parse(s.data().s);snd(G,n);G=n;me=G.players.findIndex(p=>p.id==pid);render()}},e=>{msg="接続エラー: "+e.message;render()})}
+async function enter(create){
+ const name=$("nm").value.trim(),cd=$("cd").value.trim();
+ if(!name||!cd){msg="名前と部屋コードを入力してください";return render()}
+ ss("mjname",name);ss("mjcode",cd);code=cd;
+ try{ref=db.doc("rooms/"+code);const s=await ref.get();
+  if(s.exists){const g=JSON.parse(s.data().s),i=g.players.findIndex(p=>p.id==pid);
+   if(i<0){if(g.players.length>=2||create)return(msg="その部屋は使用中です",render());g.players.push({id:pid,name});await ref.set({s:JSON.stringify(g)})}
+   else if(g.players[i].name!=name||g.left===i){g.players[i].name=name;if(g.left===i)g.left=null;await ref.set({s:JSON.stringify(g)})}}
+  else{if(!create)return(msg="部屋が見つかりません",render());
+   await ref.set({s:JSON.stringify({players:[{id:pid,name}],mode,phase:"lobby",scores:[0,0],round:0,v:0})})}
+  msg="";listen()}catch(e){msg="エラー: "+(e.message||e.code);render()}}
+function start(){act(g=>{g.doraN=3;g.scores=[0,0];g.round=0;g.hist=[];g.left=null;deal(g)})}
+/* ---- 描画 ---- */
+function render(){
+ if(!G){app.innerHTML=`<div class="menu"><div class="logo">${[9,10,11,12].map(i=>tl(i)).join("")}</div>
+ <h1>索子麻雀</h1><div class="sub">2人対戦 ／ 索子＋字牌 ／ ドラ3枚 ／ 赤5索</div>
+ <div class="card"><div class="ct">ユーザー名</div><input id="nm" placeholder="あなたの名前" maxlength="12" value="${esc(sg("mjname"))}"></div>
+ <div class="card"><div class="ct">対局の長さ</div><div class="seg"><button class="${mode=="S"?"on":""}" onclick="setMode('S')">南2局まで</button><button class="${mode=="N"?"on":""}" onclick="setMode('N')">北2局まで</button></div></div>
+ <button class="big y" onclick="vsCpu()">CPUと対戦（ひとり用）</button>
+ <div class="card"><div class="ct">友人と対戦（オンライン）</div><input id="cd" placeholder="部屋コード" maxlength="12" value="${esc(sg("mjcode"))}">
+ <div class="row"><button class="p" onclick="enter(true)">部屋を作る</button><button onclick="enter(false)">参加する</button></div></div>
+ <details class="rl"><summary>ルール</summary><ul><li>子の和了：符×2^(翻+2)×4／親：×6（上限なし・単純加算）</li><li>親は1局ごとに交代、連荘なし</li><li>ポン・カン・リーチ・ロン・ツモあり（チーなし）</li><li>フリテン・裏ドラ・赤5索1枚あり／役満は13翻</li></ul></details>
+ <div class="toast">${esc(msg)}</div></div>`;return}
+ const g=G,pn=i=>esc(g.players[i]?.name||"待機中");
+ if(g.phase=="lobby"){app.innerHTML=`<div class="menu"><div class="card"><div class="ct">部屋コード</div><div class="code">${esc(code)}</div><div class="dim" style="text-align:center">${g.mode=="S"?"南2局まで":"北2局まで"}</div></div>
+ <div class="card"><div class="ct">参加者</div>${[0,1].map(i=>`<div class="slot ${g.players[i]?"":"emp"}">${g.players[i]?esc(g.players[i].name)+(i==0?"（ホスト）":""):"待機中…"}</div>`).join("")}</div>
+ ${g.players.length<2?'<p class="dim" style="text-align:center">友人に部屋コードを伝えて参加してもらってください。</p>':me==0?'<button class="big p" onclick="start()">ゲーム開始</button>':'<p class="dim" style="text-align:center">ホストの開始を待っています…</p>'}
+ <button onclick="toMenu()">メニューへ戻る</button>${g.left!=null&&g.left!=me?'<div class="toast">相手が退出しました</div>':""}</div>`;return}
+ if(me<0){app.innerHTML='<div class="lob">この部屋は満員です。</div>';return}
+ const o=1-me,hand=g.hands[me],canD=g.turn==me&&g.phase=="discard",reactor=g.phase=="react"&&g.turn==me,locked=g.riichi[me];
+ const full=hand.slice();if(g.drawn!=null&&g.turn==me)full.push(g.drawn);
+ const panel=i=>`<div class="pl ${g.turn==i&&g.phase!="result"?"on":""}"><span class="wd">${N[i==g.dealer?0:1]}</span><b>${pn(i)}</b>${i==me?'<span class="dim">あなた</span>':""}${g.riichi[i]?'<span class="tag">リーチ</span>':""}${i==me&&furi(g,me)?'<span class="tag gy">フリテン</span>':""}<span class="pt">${g.scores[i]}</span></div>`;
+ const melds=i=>g.melds[i].map(m=>`<span class="ml">${m.tiles.map(t=>tl(t,"sm")).join("")}</span>`).join("");
+ const river=i=>{const L=g.disc[i];return L.map((t,k)=>tl(t,"sm"+(g.rj&&g.rj[i]==k?" ri":"")+(g.last&&g.last.p==i&&g.phase=="react"&&k==L.length-1?" nw":""))).join("")};
+ const rOK=t=>{if(!ank(g,me)||g.riichi[me])return false;const f=full.slice();f.splice(f.indexOf(t),1);return tenpai(f,g.melds[me].length)};
+ const tile=(t,isD)=>{const ok=canD&&(!locked||isD)&&(!rii||rOK(t));
+  return `<span onclick="${ok?`pick(${t},${isD?1:0})`:""}" style="display:inline-block">${tl(t,"h"+(ok?"":" no")+(rii&&pv===t?" sel":""))}</span>`};
+ const canR=canD&&g.drawn!=null&&ank(g,me)&&!g.riichi[me]&&full.some(t=>rOK(t));
+ const vc=cnt([].concat(g.disc[0],g.disc[1],g.dora,full,...g.melds[0].map(m=>m.tiles),...g.melds[1].map(m=>m.tiles)));
+ const wl=(ws,lb)=>ws.length?`<div class="wt"><span class="dim">${lb}</span> ${ws.map(x=>`<span class="wi">${tl(x,"sm")}<i>${Math.max(0,4-vc[x])}枚</i></span>`).join("")}</div>`:"";
+ let wtH="";const nmm=g.melds[me].length;
+ if(rii&&pv!=null){const f=full.slice();f.splice(f.indexOf(pv),1);wtH=wl(wt(f,nmm),"この牌を切ってリーチすると待ち：")}
+ else if(rii)wtH='<div class="wt dim">捨てる牌を1回クリックで待ちを確認、もう1回クリックで確定</div>';
+ else if(hand.length==13-3*nmm&&(!canD||locked))wtH=wl(wt(hand,nmm),"聴牌・待ち：");
+ let acts="";
+ if(canD){const r=g.drawn!=null&&evalH(g,me,full,true);
+  if(r)acts+=`<button class="w" onclick="tsumo()">ツモ（${r.pts}点）</button>`;
+  if(!rii)kanOpts(g,me,full).forEach(([x,s])=>acts+=`<button class="p" onclick="kan(${x},${s})">${s?"加槓":"暗槓"} ${tn(x)}</button>`);
+  if(canR)acts+=`<button class="${rii?"w":"y"}" onclick="rii=!rii;pv=null;render()">${rii?"リーチ取消":"リーチ"}</button>`;
+  if(!rii)acts+='<span class="dim">捨てる牌をクリック</span>'}
+ if(reactor){const r=opts(g,me);acts+=`<span>相手の捨て牌 ${tl(g.last.t,"sm")}</span>`;
+  if(r.ron)acts+=`<button class="w" onclick="ron()">ロン</button>`;
+  if(r.pon)acts+=`<button class="p" onclick="pon()">ポン</button>`;
+  if(r.kan)acts+=`<button class="p" onclick="dkan()">大明槓</button>`;
+  acts+=`<button onclick="pass()">パス</button>`}
+ else if(!canD&&g.phase!="result")acts+='<span class="dim">相手の操作待ち…</span>';
+ const dr=Array.from({length:Math.max(5,g.dora.length)},(_,k)=>k<g.dora.length?tl(g.dora[k],"sm"):'<span class="t sm bk"></span>').join("");
+ let h=`<button class="mt mn" onclick="mm=true;render()">☰ メニュー</button><button class="mt" onclick="mute=!mute;ss('mjmute',mute?'1':'0');render()">${mute?"🔇":"🔊"}</button><div class="tbl"><div class="zone">${panel(o)}<div class="hnd">${bk(g.hands[o].length+(g.drawn!=null&&g.turn==o?1:0))}<span style="margin-left:10px">${melds(o)}</span></div></div>
+ <div class="zone">${g.riichi[o]?'<div class="sw"><span class="stk"></span></div>':""}<div class="rv">${river(o)}</div></div>
+ <div class="ctr"><div><div class="rn">${RN[g.round]}局</div><div class="dim">残り ${g.wall.length}枚</div></div><div><div class="dim">ドラ表示牌</div><div class="hnd" style="margin:0">${dr}</div></div></div>
+ <div class="zone">${g.riichi[me]?'<div class="sw"><span class="stk"></span></div>':""}<div class="rv">${river(me)}</div></div>
+ <div class="zone">${panel(me)}${wtH}<div class="acts">${acts}</div><div class="hnd">${hand.map(t=>tile(t,0)).join("")}${g.drawn!=null&&g.turn==me?'<span style="margin-left:12px"></span>'+tile(g.drawn,1):""}<span style="margin-left:12px">${melds(me)}</span></div></div></div>`;
+ if(msg)h+=`<div class="toast">${esc(msg)}</div>`;
+ const last=g.round+1>=(g.mode=="S"?4:8);
+ if(g.phase=="result"){const r=g.res;
+  h+=`<div class="ov"><div class="md">`+(r.kind=="draw"?`<h3>荒牌平局</h3><p>牌山がなくなりました。得点の移動はありません。</p>`:
+  `<h3 style="margin-top:0">${pn(r.w)} の${r.tsumo?"ツモ":"ロン"}和了！ ${r.yaku.some(y=>y[1]>=13)?'<span class="tag">役満</span>':""}</h3>
+  <div class="hnd" style="justify-content:flex-start">${r.melds.map(m=>"<span class=\"ml\">"+m.tiles.map(t=>tl(t,"sm")).join("")+"</span>").join("")}${r.hand.map(t=>tl(t,"sm")).join("")}<span style="margin-left:8px"></span>${tl(r.tile,"sm")}</div>
+  <div class="dim">ドラ表示 ${r.dora.map(i=>tl(i,"sm")).join("")}${r.rii?" 裏 "+r.ura.map(i=>tl(i,"sm")).join(""):""}</div>
+  <table>${r.yaku.map(y=>`<tr><td>${y[0]}</td><td>${y[1]}翻</td></tr>`).join("")}
+  <tr><td><b>合計</b></td><td><b>${r.han}翻 ${r.fu}符</b></td></tr></table>
+  <p class="sc">+${r.pts}点（${r.w==g.dealer?"親":"子"}）</p><div class="dim">※待ち符は未考慮</div>`)+
+  `<div class="row"><button class="p" onclick="nxt()">${last?"最終結果へ":"次の局へ"}</button></div></div></div>`}
+ if(g.phase=="end"){const od=[0,1].sort((a,b)=>g.scores[b]-g.scores[a]),tie=g.scores[0]==g.scores[1];
+  h+=`<div class="ov"><div class="md"><div class="crown">${tie?"🤝":"🏆"}</div><h2 style="margin:4px 0 12px;text-align:center">${tie?"引き分け":pn(od[0])+" の勝利！"}</h2>
+  <div class="rank">${od.map((i,k)=>`<div class="rk ${k==0&&!tie?"top":""}"><span class="no">${tie?"-":(k+1)+"位"}</span><b>${pn(i)}</b><span class="pt">${g.scores[i]}</span></div>`).join("")}</div>
+  <div class="dim" style="text-align:center">点差 ${Math.abs(g.scores[0]-g.scores[1])}点</div>
+  <table class="hs">${(g.hist||[]).map(x=>`<tr><td>${x.rn}局</td><td>${x.w<0?"流局":pn(x.w)+"　"+(x.ts?"ツモ":"ロン")+" "+x.han+"翻"+x.fu+"符"}</td><td>${x.w<0?"":"+"+x.pts}</td></tr>`).join("")}</table>
+  <div class="row" style="justify-content:center">${me==0?'<button class="p" onclick="start()">もう一度</button>':'<span class="dim">ホストが再開できます</span>'}<button onclick="toMenu()">メニューへ</button></div></div></div>`}
+ if(g.left!=null&&g.left!=me)h+='<div class="toast">相手が退出しました。メニューから新しい対局を始めてください。</div>';
+ if(mm)h+=`<div class="ov" style="z-index:9"><div class="md"><h3 style="margin-top:0">メニューに戻りますか？</h3><p>${local?"この対局は破棄されます。":"対局を中断します。相手に退出が伝わります。"}</p><div class="row"><button class="w" onclick="toMenu()">戻る</button><button onclick="mm=false;render()">続ける</button></div></div></div>`;
+ app.innerHTML=h}
+/* ---- SE ---- */
+let ac,mute=sg("mjmute")=="1",mode=sg("mjmode")=="N"?"N":"S";
+function setMode(m){ss("mjname",$("nm").value);ss("mjcode",$("cd").value);mode=m;ss("mjmode",m);render()}
+function toMenu(){clearTimeout(ct);if(unsub){unsub();unsub=null}
+ if(!local&&ref&&G&&G.players){const g=cl(G);if(g.phase=="lobby"&&me==1)g.players.splice(1,1);else g.left=me;g.v=(g.v||0)+1;ref.set({s:JSON.stringify(g)}).catch(()=>{})}
+ G=null;me=-1;local=false;rii=false;pv=null;mm=false;msg="";render()}
+function tone(f,d,ty="sine",v=.15,t0=0,f2){try{if(mute)return;ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state=="suspended")ac.resume();
+ const o=ac.createOscillator(),gn=ac.createGain(),t=ac.currentTime+t0;o.type=ty;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+ gn.gain.setValueAtTime(v,t);gn.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(gn);gn.connect(ac.destination);o.start(t);o.stop(t+d)}catch(e){}}
+function snd(a,b){if(!a||!b||!a.disc||!b.disc||(b.round!=a.round&&b.phase!="result"))return;
+ const n=x=>x.disc[0].length+x.disc[1].length,mc=x=>x.melds[0].concat(x.melds[1]).reduce((s,m)=>s+m.tiles.length,0);
+ if(b.phase=="result"&&a.phase!="result")return b.res.kind=="win"?[523,659,784,1047].forEach((f,i)=>tone(f,.3,"sine",.18,i*.1)):tone(330,.5,"triangle",.18,0,180);
+ if((b.riichi[0]&&!a.riichi[0])||(b.riichi[1]&&!a.riichi[1])){tone(440,.12,"sawtooth",.12);tone(660,.12,"sawtooth",.1,.1);tone(880,.3,"sawtooth",.12,.2);return}
+ if(mc(b)>mc(a)){tone(520,.1,"triangle",.22);tone(780,.16,"triangle",.22,.09)}
+ else if(n(b)>n(a))tone(750,.06,"square",.1,0,260)}
+/* ---- 操作 ---- */
+function pick(t,d){if(rii){if(pv===t){pv=null;clk(t,d)}else{pv=t;render()}}else clk(t,d)}
+function clk(t,isD){const r=rii;act(g=>discard(g,me,t,r))}
+function tsumo(){act(g=>{const f=g.hands[me].concat(g.drawn);const r=evalH(g,me,f,true);const t=g.drawn;g.drawn=null;win(g,me,r,true,t)})}
+function ron(){act(g=>{const t=g.last.t,r=evalH(g,me,g.hands[me].concat(t),false);win(g,me,r,false,t)})}
+function pass(){act(g=>{if(evalH(g,me,g.hands[me].concat(g.last.t),false))g.fur[me]=true;draw(g,me)})}
+const take=(h,x)=>{let i=h.indexOf(x);if(i<0&&x==4)i=h.indexOf(16);return h.splice(i,1)[0]};
+function meld(g,m,k,rm){const t=g.last.t,h=g.hands[m],tk=rm.map(x=>take(h,x)),kn=k=="kan";
+ g.melds[m].push({k,open:kn,tiles:srt(tk.concat(t))});g.disc[g.last.p].pop();
+ if(kn)kdraw(g,m);else{g.phase="discard";g.turn=m;g.drawn=null}}
+function kdraw(g,m){g.drawn=null;if(g.wall.length<2){dgame(g);return}g.dora.push(g.wall.shift());draw(g,m)}
+function pon(){const t=nt(G.last.t);act(g=>meld(g,me,"pon",[t,t]))}
+function dkan(){const t=nt(G.last.t);act(g=>meld(g,me,"kan",[t,t,t]))}
+function sameW(g,m,full,x){const a=wt(g.hands[m],g.melds[m].length),f=full.filter(t=>nt(t)!=x);return a.length>0&&JSON.stringify(a)==JSON.stringify(wt(f,g.melds[m].length+1))}
+function kanOpts(g,m,full){const c=cnt(full),r=[];
+ for(let x=0;x<16;x++){const pn=g.melds[m].some(y=>y.k=="pon"&&nt(y.tiles[0])==x);
+  if(c[x]==4){if(!g.riichi[m]||(nt(g.drawn)==x&&sameW(g,m,full,x)))r.push([x,0])}
+  else if(pn&&c[x]>=1&&!g.riichi[m])r.push([x,1])}
+ return g.wall.length>1&&g.drawn!=null?r:[]}
+function kan(x,s){act(g=>{const full=g.hands[me].concat(g.drawn);let rm;
+ if(!s){rm=full.filter(t=>nt(t)==x);g.melds[me].push({k:"kan",open:false,tiles:srt(rm.slice())})}
+ else{const mm=g.melds[me].find(y=>y.k=="pon"&&nt(y.tiles[0])==x);rm=[full.find(t=>nt(t)==x)];mm.tiles=srt(mm.tiles.concat(rm));mm.k="kan";mm.open=true}
+ const rest=full.slice();rm.forEach(t=>rest.splice(rest.indexOf(t),1));g.hands[me]=srt(rest);kdraw(g,me)})}
+function chi(i){act(g=>meld(g,me,"chi",opts(g,me).chi[i]))}
+function nxt(){act(g=>nextRound(g))}
+/* ---- CPU ---- */
+function shan(c,nm){let best=8;
+ const rec=(i,m,t,p)=>{while(i<16&&!c[i])i++;
+  if(i>=16){const mm=m+nm,s=8-2*mm-Math.min(t,4-mm)-(p?1:0);if(s<best)best=s;return}
+  if(c[i]>=3){c[i]-=3;rec(i,m+1,t,p);c[i]+=3}
+  if(i<7&&c[i+1]&&c[i+2]){c[i]--;c[i+1]--;c[i+2]--;rec(i,m+1,t,p);c[i]++;c[i+1]++;c[i+2]++}
+  if(!p&&c[i]>=2){c[i]-=2;rec(i,m,t,1);c[i]+=2}
+  if(c[i]>=2){c[i]-=2;rec(i,m,t+1,p);c[i]+=2}
+  if(i<8&&c[i+1]){c[i]--;c[i+1]--;rec(i,m,t+1,p);c[i]++;c[i+1]++}
+  if(i<7&&c[i+2]){c[i]--;c[i+2]--;rec(i,m,t+1,p);c[i]++;c[i+2]++}
+  c[i]--;rec(i,m,t,p);c[i]++};
+ rec(0,0,0,0);
+ if(!nm){const pr=c.filter(x=>x>=2).length,kd=c.filter(x=>x>0).length;best=Math.min(best,6-pr+Math.max(0,7-kd))}
+ return best}
+function vsCpu(){const name=$("nm").value.trim()||"あなた";ss("mjname",name);local=true;me=0;code="";
+ G={players:[{id:pid,name},{id:"cpu",name:"CPU"}],mode,phase:"lobby",scores:[0,0],round:0,v:0};start()}
+function cpuTick(){if(!local||!G||G.turn!=1||(G.phase!="discard"&&G.phase!="react"))return;clearTimeout(ct);ct=setTimeout(cpuMove,G.phase=="react"?500:900)}
+function cpuMove(){const g=G;if(!g||g.turn!=1||(g.phase!="discard"&&g.phase!="react"))return;me=1;try{cpuAct(g)}finally{me=0;rii=false;render()}}
+function cpuAct(g){const h=g.hands[1],nm=g.melds[1].length;
+ if(g.phase=="react"){const r=opts(g,1),t=nt(g.last.t);if(r.ron)return ron();if(r.kan)return dkan();
+  const b=shan(cnt(h),nm);
+  if(r.pon){const c=cnt(h);c[t]-=2;if(shan(c,nm+1)<b)return pon()}
+  let bi=-1,bs=b;r.chi.forEach(([a,x],i)=>{const c=cnt(h);c[a]--;c[x]--;const s=shan(c,nm+1);if(s<bs){bs=s;bi=i}});
+  if(bi>=0)return chi(bi);return pass()}
+ const full=g.drawn!=null?h.concat(g.drawn):h.slice();
+ if(g.drawn!=null){if(evalH(g,1,full,true))return tsumo();
+  const ak=kanOpts(g,1,full);if(ak.length&&!g.riichi[1])return kan(ak[0][0],ak[0][1])}
+ if(g.riichi[1]){rii=false;return clk(g.drawn,1)}
+ const c=cnt(full),D=g.dora.map(doraOf),cand=[...new Set(full.map(nt))],res=[];
+ for(const x of cand){c[x]--;res.push({x,s:shan(c,nm)});c[x]++}
+ const ms=Math.min(...res.map(r=>r.s));
+ for(const r of res){r.k=r.s*1000+(D.includes(r.x)?15:0);if(r.s==ms){const x=r.x;let u=0;c[x]--;
+  for(let y=0;y<16;y++){const rem=4-c[y];if(rem>0){c[y]++;if(shan(c,nm)<ms)u+=rem;c[y]--}}c[x]++;r.k-=u*10}
+  if(r.x>=9&&c[r.x]==1&&r.x<13)r.k-=3}
+ res.sort((a,b)=>a.k-b.k);const x=res[0].x;
+ const t=full.find(v=>nt(v)==x&&v!=16)??16;
+ if(ank(g,1)&&!g.riichi[1]){const f=full.slice();f.splice(f.indexOf(t),1);if(tenpai(f,nm))rii=true}
+ clk(t,0)}
+(async()=>{try{const c=await claude.use("db");if(!c)throw 0;db=c;render()}catch(e){msg="共有データが使えないため、オンライン対戦は不可です（CPU戦のみ）";render()}})();
+</script></body></html>
